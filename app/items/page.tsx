@@ -1,6 +1,6 @@
 "use client"
 
-import Navbar from "../components/layouts/navbar";
+import Navbar from "@/components/layouts/navbar";
 import Image from "next/image";
 import Link from "next/link";
 
