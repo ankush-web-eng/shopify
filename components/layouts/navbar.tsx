@@ -6,17 +6,32 @@ import { useEffect, useState } from "react";
 import { FaCartShopping } from "react-icons/fa6";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
+import { signOut } from "next-auth/react";
+
+// import { User } from "@/schemas/userSchema";
+
+interface User {
+  name:string,
+  email:string,
+  image:string,
+  password:string,
+  isVerified:boolean,
+  verifyCode:string,
+  cart:[],
+  orders:[]
+}
 
 export default function Navbar() {
   const [logged, setLogged] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
   const [image, setImage] = useState<File | null>(null);
   const [send, setSend] = useState<boolean>(false);
+  const [user,setUser] = useState<User>()
 
   const router = useRouter();
   const { data: session } = useSession();
   const email = session?.user?.email;
-  console.log(email,image);
+  // console.log(email);
 
   useEffect(() => {
     if (session) {
@@ -54,6 +69,20 @@ export default function Navbar() {
     }
   };
 
+  const getUser = async() => {
+    try {
+      const response = await axios.post("/api/user", {email})
+      // setUser(response.data.data)
+      console.log(response.data.data.image);
+    } catch (error) {
+      console.log("Unable to get User Data",error);
+    }
+  }
+
+  useEffect(() => {
+    getUser()
+  })
+
   return (
     <div className="flex justify-between items-center pt-4 px-4 w-screen">
       <h1 className="font-mono italic text-2xl">Shophilic</h1>
@@ -62,9 +91,7 @@ export default function Navbar() {
           <Image
             src={
               logged
-                ? session?.user?.image === ""
-                  ? "/user.png"
-                  : session?.user.image
+                ? (user?.image ?? "/user.png")
                 : "/user.png"
             }
             alt={logged ? session?.user?.name : "User"}
@@ -92,6 +119,7 @@ export default function Navbar() {
                   "Upload"
                 )}
               </Button>
+              <Button variant={"destructive"} onClick={() => signOut()}>Logout</Button>
             </div>
           )}
         </div>

@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const url = uploadResponse.secure_url;
+    const url = (uploadResponse as { secure_url: string }).secure_url;
 
     // Update user profile with new image URL
     const user = await UserModel.findOne({ email });
