@@ -1,5 +1,5 @@
 import Connect from "@/lib/dbConnect";
-import { ProductModel } from "@/model/Products";
+import ProductModel from "@/model/Products";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -11,7 +11,7 @@ type Params = {
 
 export async function GET(req: NextRequest, context: Params) {
     const id = context.params.id
-    console.log(id);
+    // console.log(id);
     await Connect(); // Ensure the connection to the database is awaited
 
     try {

@@ -22,8 +22,8 @@ export interface User extends Document {
     isVerified:boolean,
     verifyCode:string,
     image:string,
-    orders:[]
-    cart:[]
+    orders:Order[]
+    cart:Cart[]
 }
 
 const userSchema : Schema<User> = new Schema({

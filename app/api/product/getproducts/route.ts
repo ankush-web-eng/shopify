@@ -1,5 +1,5 @@
 import Connect from "@/lib/dbConnect";
-import { ProductModel } from "@/model/Products";
+import ProductModel from "@/model/Products";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
