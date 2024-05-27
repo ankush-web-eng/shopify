@@ -15,6 +15,8 @@ export default async function middleware(request: NextRequest) {
     const email = token?.email;
     const url = request.nextUrl;
 
+    // console.log('middleware', token, email, url.pathname);
+
 
     if (
         token &&
@@ -24,13 +26,10 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/items', request.url));
     }
 
-    if (token && email == process.env.ADMIN_EMAIL && url.pathname.startsWith('/product')) {
-        return NextResponse.redirect(new URL('/items', request.url));
-    }
-
+ 
     if (
         !token &&
-           url.pathname.startsWith('/cart') || url.pathname.startsWith('/product')) { 
+           url.pathname.startsWith('/cart') ) { 
         return NextResponse.redirect(new URL('/sign-in', request.url));
     }
 

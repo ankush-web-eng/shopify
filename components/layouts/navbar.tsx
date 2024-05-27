@@ -88,7 +88,7 @@ export default function Navbar() {
 
   return (
     <div className="flex justify-between items-center pt-4 px-4 w-screen">
-      <h1 className="font-mono italic text-2xl">Shophilic</h1>
+      <h1 className="font-mono italic text-2xl">Shopister</h1>
       <ul className="flex space-x-4 items-center">
         <div className="relative cursor-pointer">
           <Image

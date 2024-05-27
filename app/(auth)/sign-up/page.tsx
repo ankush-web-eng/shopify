@@ -79,7 +79,7 @@ export default function SignUpForm() {
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
             Hey Stranger 👋
           </h1>
-          <p className="mb-4">Sign up to track your Expenses</p>
+          <p className="mb-4">Sign up</p>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
