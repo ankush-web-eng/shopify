@@ -7,6 +7,7 @@ import { FaCartShopping } from "react-icons/fa6";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
 
 // import { User } from "@/schemas/userSchema";
 
@@ -125,12 +126,12 @@ export default function Navbar() {
             </div>
           )}
         </div>
-        <div className="relative">
+        <Link href={"/cart"} className="relative">
           <FaCartShopping size={24} />
           <span className="absolute -right-[12px] -top-[12px] px-1 rounded-full bg-red-500">
             {cart.length > 0 ? cart.length : 0}
           </span>
-        </div>
+        </Link>
       </ul>
     </div>
   );

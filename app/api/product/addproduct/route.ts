@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { NextRequest } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
 import Connect from '@/lib/dbConnect';
-import { ProductModel } from '@/model/Products';
+import ProductModel from '@/model/Products';
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
