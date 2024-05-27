@@ -16,7 +16,7 @@ export default function Home() {
 
   return (
     <div className="h-screen w-screen flex justify-center items-center">
-      <h1 className="text-4xl font-mono italic">Hello Ankush</h1>
+      <h1 className="text-4xl font-mono italic">Hello Stranger, Welcome to Shopister</h1>
     </div>
   )
 }
