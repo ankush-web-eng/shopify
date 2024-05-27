@@ -24,7 +24,7 @@ export default async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/items', request.url));
     }
 
-    if (token && email !== process.env.ADMIN_EMAIL && url.pathname.startsWith('/product')) {
+    if (token && email == process.env.ADMIN_EMAIL && url.pathname.startsWith('/product')) {
         return NextResponse.redirect(new URL('/items', request.url));
     }
 
