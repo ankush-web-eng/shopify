@@ -27,6 +27,7 @@ export default function Navbar() {
   const [image, setImage] = useState<File | null>(null);
   const [send, setSend] = useState<boolean>(false);
   const [user,setUser] = useState<User>()
+  const [cart, setCart] = useState<any[]>([]);
 
   const router = useRouter();
   const { data: session } = useSession();
@@ -72,8 +73,9 @@ export default function Navbar() {
   const getUser = async() => {
     try {
       const response = await axios.post("/api/user", {email})
-      // setUser(response.data.data)
-      console.log(response.data.data.image);
+      setUser(response.data.data)
+      // console.log(response.data.data.image);
+      setCart(response.data.data.cart)
     } catch (error) {
       console.log("Unable to get User Data",error);
     }
@@ -126,7 +128,7 @@ export default function Navbar() {
         <div className="relative">
           <FaCartShopping size={24} />
           <span className="absolute -right-[12px] -top-[12px] px-1 rounded-full bg-red-500">
-            2
+            {cart.length > 0 ? cart.length : 0}
           </span>
         </div>
       </ul>
