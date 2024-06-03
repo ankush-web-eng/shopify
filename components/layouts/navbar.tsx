@@ -2,13 +2,14 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaCartShopping } from "react-icons/fa6";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 
+import { useUserInfo } from "@/context/userInfo";
 // import { User } from "@/schemas/userSchema";
 
 interface User {
@@ -70,6 +71,9 @@ export default function Navbar() {
       alert("Error in Uploading Image");
     }
   };
+
+  // const userInfo = useUserInfo()
+  // setUser(userInfo.userInfo)
 
   const getUser = async() => {
     try {

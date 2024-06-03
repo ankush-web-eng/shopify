@@ -24,8 +24,9 @@ export default function Product({params}: {params: Product}) {
             console.log("Error in removing Product",error);
         }
     }
+
     return (
-        <Link href={`/items/${params._id}`} className="flex border-gray-400 border rounded-lg p-3 space-x-3">
+        <Link href={`/items/${params._id}`} className="flex border-gray-400 border shadow-2xl rounded-lg p-6 space-x-3">
             <Image src={params?.images[0]} alt={params.product} height={50} width={100} fetchPriority="high" className="border rounded-lg"/>
                 <div className="felx flex-col space-y-2">
                 <h1 className="text-2xl">{params.product}</h1>
