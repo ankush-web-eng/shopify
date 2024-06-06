@@ -20,6 +20,6 @@ export default async function Connect() {
         console.log('Connected to database');
     } catch (error) {
         console.log('Error connecting to database');
-        console.log(error);
+        // console.log(error);
     }
 }
