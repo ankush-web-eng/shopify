@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { DeleteIcon, Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Product {
   _id: string;
@@ -19,6 +20,7 @@ interface Product {
 export default function Product({ params }: { params: Product }) {
   const router = useRouter();
   const [send, setSend] = useState(false);
+  const {toast} = useToast()
   const { data: session } = useSession();
   const email = session?.user?.email;
 
@@ -34,8 +36,10 @@ export default function Product({ params }: { params: Product }) {
         router.refresh();
       }
     } catch (error) {
-      alert("Error in removing Product");
-      console.log("Error in removing Product", error);
+      toast({
+        title: 'Success',
+        description: "An error occurred. Please try again.",
+      });
     }
   };
 

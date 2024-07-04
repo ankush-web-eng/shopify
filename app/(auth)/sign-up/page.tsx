@@ -47,12 +47,10 @@ export default function SignUpForm() {
       toast({
         title: 'Success',
         description: response.data.message,
-        // description: 'Please verify your email address to continue',
       });
 
-      router.replace(`/sign-in`);
-
       setIsSubmitting(false);
+      router.replace(`/verify/${email}`);
     } catch (error) {
       console.error('Error during sign-up:', error);
 

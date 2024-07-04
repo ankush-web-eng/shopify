@@ -11,6 +11,8 @@ import { useSession } from "next-auth/react";
 import { Carousel } from "react-responsive-carousel";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 interface Product {
@@ -28,6 +30,7 @@ export default function Page({ params }: { params: { item: String } }) {
   const [product, setProduct] = useState<Product>();
   const [cart, setCart] = useState<boolean>(false);
   const router = useRouter();
+  const {toast} = useToast()
 
   const { data: session } = useSession()
   const email = session?.user?.email
@@ -49,13 +52,19 @@ export default function Page({ params }: { params: { item: String } }) {
     setCart(true);
     try {
       const response = await axios.post("/api/product/addtocart", { email, id })
-      if (response) {
+      if (response.status == 201) {
+        toast({
+          title: 'Success',
+          description: response.data.message,
+        });
         setCart(false)
-        router.push("/cart");
       }
     } catch (error) {
-      console.log(error);
-      alert("Unable to add Product to Cart")
+      toast({
+        title: 'Success',
+        description: "An error occurred. Please try again.",
+        variant: 'destructive',
+      });
       setCart(false)
     }
   }

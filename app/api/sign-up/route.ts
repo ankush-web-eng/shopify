@@ -1,9 +1,8 @@
 import Connect from '@/lib/dbConnect';
 import UserModel from '@/model/User';
 import bcrypt from 'bcryptjs';
-// import { sendVerificationEmail } from '@/helpers/sendVerificationMain';
+import { sendVerificationEmail } from '@/helpers/sendVerificationMail';
 import { NextRequest } from 'next/server';
-import { revalidatePath } from 'next/cache';
 
 export async function POST(request: NextRequest) {
   await Connect();
@@ -20,7 +19,7 @@ export async function POST(request: NextRequest) {
       return Response.json(
         {
           success: false,
-          message: 'Already registered with this email. Please login.',
+          message: 'User already registered. Please login.',
         },
         { status: 400 }
       );
@@ -54,7 +53,7 @@ export async function POST(request: NextRequest) {
         email,
         password: hashedPassword,
         verifyCode,
-        isVerified: true,
+        isVerified: false,
         image: '',
         cart: [],
         orders: [],
@@ -64,20 +63,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Send verification email
-    // const emailResponse = await sendVerificationEmail(
-    //   email,
-    //   username,
-    //   verifyCode
-    // );
-    // if (!emailResponse.success) {
-    //   return Response.json(
-    //     {
-    //       success: false,
-    //       message: emailResponse.message,
-    //     },
-    //     { status: 500 }
-    //   );
-    // }
+    const emailResponse = await sendVerificationEmail(
+      email,
+      username,
+      verifyCode
+    );
+    if (!emailResponse.success) {
+      return Response.json(
+        {
+          success: false,
+          message: emailResponse.message,
+        },
+        { status: 500 }
+      );
+    }
 
     // const path = request.nextUrl.searchParams.get("path") || "/sign-up"
     // revalidatePath(path)
