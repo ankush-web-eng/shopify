@@ -1,17 +1,16 @@
 import Connect from "@/lib/dbConnect";
-import { useSession } from "next-auth/react";
 import UserModel from "@/model/User";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 
-export async function POST(req:NextRequest) {
+export async function GET() {
 
-    Connect()
+    await Connect()
+    const session = await getServerSession(authOptions)
+    const email = session?.user?.email
 
     try {
-        const reqBody = await req.json()
-        const {email} = reqBody
-        // console.log(reqBody);
-
         const user = await UserModel.findOne({ email })
         if (user) {
             return NextResponse.json({ data: user })
@@ -21,6 +20,6 @@ export async function POST(req:NextRequest) {
         }
 
     } catch (error) {
-        return NextResponse.json({ success: false, message: "Unabel to get UserData" })
+        return NextResponse.json({ success: false, message: "Unable to get UserData" })
     }
 }

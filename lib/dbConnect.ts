@@ -4,11 +4,10 @@ type ConnectionObject = {
     isConencted?: number;
 }
 
-const connection : ConnectionObject = {}
+const connection: ConnectionObject = {}
 
 export default async function Connect() {
-    if(connection.isConencted) {
-        // console.log('Already connected to database');
+    if (connection.isConencted) {
         return;
     }
     try {
@@ -17,9 +16,5 @@ export default async function Connect() {
 
         connection.isConencted = db.connections[0].readyState;
 
-        console.log('Connected to database');
-    } catch (error) {
-        console.log('Error connecting to database');
-        // console.log(error);
-    }
+    } catch (error) { }
 }

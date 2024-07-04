@@ -1,18 +1,16 @@
 "use client"
-
-
+import { useRouter } from "next/navigation";
 import { useEffect } from "react"
 
 export default function Home() {
 
+  const router = useRouter()
 
   useEffect(() => {
     setTimeout(() => {
-      if (typeof window !== 'undefined') {
-        window.location.href = "/items";
-      }
+      router.push("/items")
     }, 2000);
-  }, []);
+  }, [router]);
 
   return (
     <div className="h-screen w-screen flex justify-center items-center">
