@@ -1,4 +1,9 @@
-import { Button } from "./ui/button";
+import CheckoutProps from "@/components/layouts/checkoutProps";
+import { useState } from 'react';
+import { loadStripe } from '@stripe/stripe-js';
+import axios from "axios";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
 type CheckoutProps = {
   params: {
@@ -11,41 +16,46 @@ type CheckoutProps = {
 };
 
 export default function Checkout({ params }: CheckoutProps) {
+
+  const [loading, setLoading] = useState(false);
+
+  const handleClick = async () => {
+    setLoading(true);
+    const stripe = await stripePromise;
+    const amount = params.total * 100
+
+    const response = await axios.post('/api/create-checkout-session', { amount: amount.toString() }, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+
+    const session = response.data;
+
+    if (session.id) {
+      const result = await stripe!.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result.error) {
+        console.error(result.error.message);
+      }
+    }
+
+    setLoading(false);
+  };
+
   return (
     <div className="max-w-fit max-h-fit border p-2 rounded-xl shadow-md flex flex-col space-y-3">
       <h1 className="text-2xl text-start font-bold ">Order Summary</h1>
-      <div className="flex w-full flex-col space-y-3">
-        <span className="flex justify-between">
-          <p className="text-gray-400 px-2">
-            Total MRP {"(inclusive of all taxes)"}
-          </p>
-          <p className="text-black">Rs. {params.cost}</p>
-        </span>
-        <span className="flex justify-between">
-          <p className="text-gray-400">Shipping Charges</p>
-          <p className="text-black">Rs. {params.shipping}</p>
-        </span>
-        <span className="flex justify-between">
-          <p className="text-gray-400">Bag Discount</p>
-          <p className="text-black">Rs. {params.discount}</p>
-        </span>
-        <span className="flex justify-between">
-          <p className="text-black font-semibold">Payable Amount</p>
-          <p className="text-black">Rs. {params.payable}</p>
-        </span>
-        <span
-          className={params.discount > 0 ? "flex justify-between" : "hidden"}
-        >
-          <p className="text-green-400">
-            You are saving {params.discount} on this Order!
-          </p>
-        </span>
-        <span className="flex justify-between border-t py-2">
-          <p className="text-black text-semibold font-serif">Final Amount</p>
-          <p className="text-black">Rs. {params.total}</p>
-        </span>
-        <Button variant={"default"}>Place Order</Button>
-      </div>
+      <CheckoutProps params={params} />
+      <button
+        className={`px-4 py-2 bg-blue-500 text-white rounded ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        onClick={handleClick}
+        disabled={loading}
+      >
+        {loading ? 'Loading...' : 'Checkout'}
+      </button>
     </div>
   );
 }
