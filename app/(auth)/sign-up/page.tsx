@@ -39,7 +39,7 @@ export default function SignUpForm() {
     },
   });
 
-  
+
   const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true);
     try {
@@ -55,16 +55,16 @@ export default function SignUpForm() {
       console.error('Error during sign-up:', error);
 
       const axiosError = error as AxiosError<ApiResponse>;
-      
+
       // Default error message
       let errorMessage = axiosError.response?.data.message;
       ('There was a problem with your sign-up. Please try again.');
-      
+
       toast({
-          title: 'Sign Up Failed',
+        title: 'Sign Up Failed',
         description: errorMessage,
         variant: 'destructive',
-    });
+      });
 
       setIsSubmitting(false);
     }
@@ -77,7 +77,7 @@ export default function SignUpForm() {
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
             Hey Stranger 👋
           </h1>
-          <p className="mb-4">Sign up</p>
+          <p className="mb-4">Sign up to start shopping</p>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -90,30 +90,30 @@ export default function SignUpForm() {
                   <Input
                     {...field}
                     onChange={(e) => {
-                        field.onChange(e);
+                      field.onChange(e);
                       setUsername(e.target.value);
                     }}
                   />
                   <FormMessage />
                 </FormItem>
               )}
-              />
+            />
             <FormField
               name="email"
               control={form.control}
               render={({ field }) => (
-                  <FormItem>
+                <FormItem>
                   <FormLabel>Email</FormLabel>
                   <Input {...field}
                     onChange={(e) => {
-                        field.onChange(e);
+                      field.onChange(e);
                       setEmail(e.target.value);
                     }} name="email" />
                   <p className='text-muted text-gray-700 text-sm'>We will send you a verification code</p>
                   <FormMessage />
                 </FormItem>
               )}
-              />
+            />
 
             <FormField
               name="password"

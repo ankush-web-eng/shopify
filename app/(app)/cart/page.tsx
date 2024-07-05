@@ -7,8 +7,9 @@ import { useSession } from "next-auth/react";
 import Checkout from "@/components/checkout";
 import Navbar from "@/components/layouts/navbar";
 import Product from "@/components/product";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
 
 interface Product {
   _id: string;
@@ -22,6 +23,7 @@ interface Product {
 export default function Page() {
   const [cart, setCart] = useState<Product[] | null>([]);
   const { toast } = useToast();
+  const router = useRouter()
   const { data: session } = useSession();
   const email = session?.user?.email;
 
@@ -45,42 +47,35 @@ export default function Page() {
     getCart();
   }, [getCart]);
 
-  useEffect(() => {
-    if (cart == null) {
-      toast({
-        title: "Cart is Empty",
-        description: "Please add some items to cart",
-      });
-      redirect("/items");
-    }
-  }, [cart, toast])
-
   return (
     <div className="min-h-screen bg-gray-100">
-  <Navbar />
-  <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-    <h1 className="text-3xl font-bold mb-8 pt-6 pb-2">Your Shopping Cart</h1>
-    <div className="flex flex-col md:flex-row md:space-x-8">
-      <div className="md:w-2/3 space-y-4 no-scrollbar overflow-hidden h-96 overflow-y-scroll">
-        {cart && cart.length > 0 ? (
-          cart.map((item, index) => <Product key={index} params={item} />)
-        ) : (
-          <p className="text-center p-4 bg-white rounded-lg shadow-md">Your cart is empty</p>
-        )}
-      </div>
-      <div className="md:w-1/3 mt-6 md:mt-0">
-        <Checkout
-          params={{
-            cost: total,
-            shipping: 0,
-            discount: 0,
-            payable: total,
-            total,
-          }}
-        />
+      <Navbar />
+      <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <h1 className="text-3xl font-bold mb-8 pt-6 pb-2">Your Shopping Cart</h1>
+        <div className="flex flex-col md:flex-row md:space-x-8">
+          <div className="md:w-2/3 space-y-4 no-scrollbar overflow-hidden h-96 overflow-y-scroll">
+            {cart && cart.length > 0 ? (
+              cart.map((item, index) => <Product key={index} params={item} />)
+            ) : (
+              <div className="flex flex-col space-y-3">
+                <p className="text-center p-4 bg-white rounded-lg shadow-md py-6">Your cart is empty</p>
+                <Button onClick={() => router.push("/items")} >Continue Shopping</Button>
+              </div>
+            )}
+          </div>
+          <div className="md:w-1/3 mt-6 md:mt-0">
+            <Checkout
+              params={{
+                cost: total,
+                shipping: 0,
+                discount: 0,
+                payable: total,
+                total,
+              }}
+            />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
   );
 }

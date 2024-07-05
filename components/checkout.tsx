@@ -1,7 +1,8 @@
 import CheckoutProps from "@/components/layouts/checkoutProps";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 
@@ -18,11 +19,18 @@ type CheckoutProps = {
 export default function Checkout({ params }: CheckoutProps) {
 
   const [loading, setLoading] = useState(false);
+  const router = useRouter()
+
+  const amount = params.total * 100
 
   const handleClick = async () => {
     setLoading(true);
+    if (params.total == 0){
+      router.push("/cart")
+      return
+    }
+
     const stripe = await stripePromise;
-    const amount = params.total * 100
 
     const response = await axios.post('/api/create-checkout-session', { amount: amount.toString() }, {
       headers: {
@@ -54,7 +62,7 @@ export default function Checkout({ params }: CheckoutProps) {
         onClick={handleClick}
         disabled={loading}
       >
-        {loading ? 'Loading...' : 'Checkout'}
+        {loading ? 'Checkout' : 'Checkout'}
       </button>
     </div>
   );

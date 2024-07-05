@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface User {
     name: string,
@@ -26,16 +27,16 @@ export default function ProfileUplaod() {
     const [image, setImage] = useState<File | null>(null);
     const [send, setSend] = useState<boolean>(false);
     const [user, setUser] = useState<User>()
-    const [cart, setCart] = useState<any[]>([]);
 
     const router = useRouter();
+    const {toast} = useToast()
     const { data: session } = useSession();
     const email = session?.user?.email;
-    // console.log(email);
 
     useEffect(() => {
         if (session) {
             setLogged(true);
+            setUser(session?.user)
         }
     }, [session]);
 
@@ -51,6 +52,15 @@ export default function ProfileUplaod() {
         formdata.append("email", email);
         formdata.append("file", image);
 
+        if (image.size > 1 * 1048 * 1048){
+            toast({
+                title : "Failed",
+                description : "Please upload a photo less than 1 mb",
+                variant : "destructive"
+            })
+            return
+        }
+
         setSend(true);
 
         try {
@@ -59,13 +69,21 @@ export default function ProfileUplaod() {
                     "Content-Type": "multipart/form-data",
                 },
             });
-            console.log(result);
             setSend(false);
-            alert("Image Uploaded Successfully");
+            toast({
+                title : "Success",
+                description : "Photo uploaded Successfully",
+                variant : "success"
+            })
+            window.location.reload()
         } catch (error) {
             console.log(error);
             setSend(false);
-            alert("Error in Uploading Image");
+            toast({
+                title : "Failed",
+                description : "Photo upload failed",
+                variant : "destructive"
+            })
         }
     };
 

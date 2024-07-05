@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react";
 import { MdDelete } from "react-icons/md";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 
 interface Product {
   _id: string;
@@ -20,6 +21,7 @@ interface Product {
 export default function Product({ params }: { params: Product }) {
   const [send, setSend] = useState(false);
   const { toast } = useToast()
+  const router = useRouter()
   const { data: session } = useSession();
   const email = session?.user?.email;
 
@@ -35,17 +37,20 @@ export default function Product({ params }: { params: Product }) {
         title: 'Success',
         description: "Item deleted from cart successfully",
       });
+      window.location.reload()
     } catch (error) {
       toast({
         title: 'Failed to delete item from cart',
         description: "An error occurred. Please try again.",
       });
+      setSend(false)
+      window.location.reload()
     }
   };
 
   return (
     <Link
-      href={(window.location.pathname === '/cart') ? `/items/${params._id}` : "#"}
+      href={(window.location.pathname === '/cart') ? "#" : `/items/${params._id}`}
       className="flex border-gray-400 border shadow-2xl rounded-lg p-6 space-x-3"
     >
       <Image

@@ -30,7 +30,7 @@ export default function Page({ params }: { params: { item: String } }) {
   const [product, setProduct] = useState<Product>();
   const [cart, setCart] = useState<boolean>(false);
   const router = useRouter();
-  const {toast} = useToast()
+  const { toast } = useToast()
 
   const { data: session } = useSession()
   const email = session?.user?.email
@@ -49,23 +49,33 @@ export default function Page({ params }: { params: { item: String } }) {
   }, [getProduct])
 
   const addToCart = async () => {
-    setCart(true);
-    try {
-      const response = await axios.post("/api/product/addtocart", { email, id })
-      if (response.status == 201) {
+    if (!email) {
+      toast({
+        title: "Please login first!",
+        variant: "destructive"
+      })
+      router.replace("/sign-in")
+      return
+    } else {
+      setCart(true);
+      try {
+        const response = await axios.post("/api/product/addtocart", { email, id })
+        if (response.status == 201) {
+          toast({
+            title: 'Success',
+            description: response.data.message,
+          });
+          setCart(false)
+          window.location.reload()
+        }
+      } catch (error) {
         toast({
-          title: 'Success',
-          description: response.data.message,
+          title: 'Failed',
+          description: "An error occurred. Please try again.",
+          variant: 'destructive',
         });
         setCart(false)
       }
-    } catch (error) {
-      toast({
-        title: 'Success',
-        description: "An error occurred. Please try again.",
-        variant: 'destructive',
-      });
-      setCart(false)
     }
   }
 
